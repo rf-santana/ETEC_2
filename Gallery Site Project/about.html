@@ -1,0 +1,503 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <!-- Basic metadata and title -->
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>About - SHIFTER GALLERY</title>
+    <style>
+        /* Custom font definition */
+        @font-face {
+            font-family: 'SpecialGothic';
+            src: url(SpecialGothicExpandedOne-Regular.ttf);
+        }
+
+        /* Basic body styling - dark mode with white text */
+        body {
+            font-family: 'SpecialGothic';
+            background-color: #000000;
+            color: #ffffff;
+            margin: 0;
+            padding: 20px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            min-height: 100vh;
+        }
+
+        /* Main heading style */
+        h1 {
+            color: #ffffff;
+            margin-bottom: 30px;
+            text-align: center;
+            letter-spacing: 1px;
+        }
+
+        /* Container for gallery content */
+        .gallery-container {
+            width: 100%;
+            max-width: 1000px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            position: relative;
+        }
+
+        /* Container for filter buttons */
+        .button-container {
+            display: flex;
+            justify-content: center;
+            flex-wrap: wrap;
+            gap: 15px;
+            margin-bottom: 30px;
+            width: 100%;
+        }
+
+        /* Button styling */
+        button {
+            padding: 12px 20px;
+            background-color: #333333;
+            color: white;
+            border: 1px solid #666666;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 16px;
+            transition: all 0.3s ease;
+            min-width: 150px;
+            font-family: 'SpecialGothic';
+            letter-spacing: 1px;
+        }
+
+        /* Button hover effect */
+        button:hover {
+            background-color: #444444;
+            transform: translateY(-2px);
+        }
+
+        /* Active button state */
+        button.active {
+            background-color: #555555;
+            box-shadow: 0 0 8px rgba(255, 255, 255, 0.3);
+        }
+
+        /* Container for displaying artwork images */
+        .image-container {
+            width: 100%;
+            height: 500px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            background-color: #111111;
+            border-radius: 8px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.8);
+            overflow: hidden;
+            position: relative;
+            border: 1px solid #333333;
+        }
+
+        /* Artwork image styling */
+        .artwork {
+            max-width: 100%;
+            max-height: 100%;
+            display: none;
+            transition: opacity 0.5s ease;
+        }
+
+        /* Active artwork display */
+        .artwork.active {
+            display: block;
+            animation: fadeIn 0.8s;
+        }
+
+        /* Information overlay for artwork */
+        .artwork-info {
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            background-color: rgba(0, 0, 0, 0.8);
+            color: white;
+            padding: 15px;
+            opacity: 0;
+            transition: opacity 0.3s ease;
+        }
+
+        /* Show artwork info on hover */
+        .image-container:hover .artwork-info {
+            opacity: 1;
+        }
+
+        /* Artwork title styling */
+        .artwork-info h3 {
+            margin: 0 0 5px 0;
+            font-size: 18px;
+            letter-spacing: 1px;
+            color: #ffffff;
+        }
+
+        /* Artwork description styling */
+        .artwork-info p {
+            margin: 0;
+            font-size: 14px;
+            letter-spacing: 0.5px;
+            color: #cccccc;
+        }
+
+        /* Fade-in animation for smooth transitions */
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+
+        /* Header and navigation styling */
+        .site-header {
+            width: 100%;
+            max-width: 1000px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+            padding-bottom: 15px;
+            border-bottom: 1px solid #333333;
+        }
+
+        /* Website title styling */
+        .site-title {
+            font-size: 28px;
+            color: #ffffff;
+            font-weight: bold;
+            margin: 0;
+            letter-spacing: 2px;
+        }
+
+        /* Navigation links container */
+        .nav-links {
+            display: flex;
+            gap: 20px;
+        }
+
+        /* Individual navigation link styling */
+        .nav-link {
+            color: #cccccc;
+            text-decoration: none;
+            font-weight: bold;
+            transition: color 0.3s;
+            letter-spacing: 1px;
+        }
+
+        /* Navigation link hover effect */
+        .nav-link:hover {
+            color: #ffffff;
+            text-shadow: 0 0 5px rgba(255, 255, 255, 0.5);
+        }
+
+        /* Modal overlay for login form */
+        .modal-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background-color: rgba(0, 0, 0, 0.8);
+            display: none;
+            justify-content: center;
+            align-items: center;
+            z-index: 1000;
+        }
+
+        /* Login form container */
+        .login-container {
+            background-color: #111111;
+            padding: 2rem;
+            border-radius: 8px;
+            box-shadow: 0 4px 8px rgba(255, 255, 255, 0.1);
+            width: 100%;
+            max-width: 400px;
+            position: relative;
+            border: 1px solid #333333;
+        }
+
+        /* Close button for modal */
+        .close-modal {
+            position: absolute;
+            top: 15px;
+            right: 15px;
+            font-size: 24px;
+            color: #cccccc;
+            cursor: pointer;
+            border: none;
+            background: none;
+            font-family: 'SpecialGothic';
+        }
+
+        /* Close button hover effect */
+        .close-modal:hover {
+            color: #ffffff;
+        }
+
+        /* Login form header styling */
+        .login-header {
+            text-align: center;
+            margin-bottom: 1.5rem;
+        }
+
+        /* Login heading styling */
+        .login-header h2 {
+            color: #ffffff;
+            margin-bottom: 0.5rem;
+            letter-spacing: 1.5px;
+        }
+
+        /* Login subheading styling */
+        .login-header p {
+            color: #aaaaaa;
+            margin: 0;
+            letter-spacing: 0.5px;
+        }
+
+        /* Form input group styling */
+        .input-group {
+            margin-bottom: 1rem;
+        }
+
+        /* Form label styling */
+        .input-group label {
+            display: block;
+            margin-bottom: 0.5rem;
+            color: #ffffff;
+            font-weight: bold;
+            letter-spacing: 0.5px;
+        }
+
+        /* Form input styling */
+        .input-group input {
+            width: 100%;
+            padding: 0.75rem;
+            border: 1px solid #444444;
+            border-radius: 4px;
+            font-size: 1rem;
+            box-sizing: border-box;
+            font-family: 'SpecialGothic';
+            background-color: #222222;
+            color: #ffffff;
+        }
+
+        /* Form input focus state */
+        .input-group input:focus {
+            outline: none;
+            border-color: #666666;
+            box-shadow: 0 0 5px rgba(255, 255, 255, 0.2);
+        }
+
+        /* Remember me checkbox styling */
+        .remember-me {
+            display: flex;
+            align-items: center;
+            margin-bottom: 1rem;
+            color: #cccccc;
+        }
+
+        /* Checkbox spacing */
+        .remember-me input {
+            margin-right: 0.5rem;
+        }
+
+        /* Login button styling */
+        .login-button {
+            background-color: #333333;
+            color: white;
+            border: 1px solid #555555;
+            padding: 0.75rem;
+            width: 100%;
+            border-radius: 4px;
+            font-size: 1rem;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-family: 'SpecialGothic';
+            letter-spacing: 1px;
+        }
+
+        /* Login button hover effect */
+        .login-button:hover {
+            background-color: #444444;
+            box-shadow: 0 0 5px rgba(255, 255, 255, 0.2);
+        }
+
+        /* Forgot password link styling */
+        .forgot-password {
+            text-align: center;
+            margin-top: 1rem;
+        }
+
+        /* Forgot password link */
+        .forgot-password a {
+            color: #aaaaaa;
+            text-decoration: none;
+            letter-spacing: 0.5px;
+        }
+
+        /* Forgot password link hover */
+        .forgot-password a:hover {
+            color: #ffffff;
+        }
+
+        /* Sign up section styling */
+        .signup {
+            text-align: center;
+            margin-top: 1.5rem;
+            padding-top: 1rem;
+            border-top: 1px solid #333333;
+        }
+
+        /* Sign up link styling */
+        .signup a {
+            color: #aaaaaa;
+            text-decoration: none;
+            font-weight: bold;
+            letter-spacing: 0.5px;
+        }
+
+        /* Sign up link hover */
+        .signup a:hover {
+            color: #ffffff;
+        }
+
+        /* User welcome message styling (shown after login) */
+        .welcome-user {
+            display: none;
+            color: #ffffff;
+            font-weight: bold;
+            letter-spacing: 0.5px;
+        }
+
+        /* About section styling */
+        .about-it {
+            font-family: 'SpecialGothic';
+            font-size: larger;
+            font-weight: bold;
+        }
+
+        /* Mobile responsive adjustments */
+        @media (max-width: 768px) {
+            .button-container {
+                flex-direction: column;
+                align-items: center;
+            }
+
+            button {
+                width: 80%;
+            }
+
+            .site-header {
+                flex-direction: column;
+                gap: 15px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Header with navigation links -->
+    <header class="site-header">
+        <h2 class="site-title">SHIFTER GALLERY</h2>
+        <div class="nav-links">
+            <a href="index.html" class="nav-link">Home</a>
+            <a href="about.html" class="nav-link">About</a>
+            <a href="contact.html" class="nav-link">Contact</a>
+            <a href="#" id="loginLink" class="nav-link">Login</a>
+            <!-- Welcome message that appears after login -->
+            <span id="welcomeUser" class="welcome-user">Welcome, <span id="userDisplay"></span>!</span>
+        </div>
+    </header>
+
+    <!-- Main content of about page -->
+    <h1>About it.</h1>
+    <p style="font-size:2vw;">Superficially inspired by Stéphane Breitwieser,<br>
+    we steal paintings and artifacts and sell them to you.</p>
+
+    <!-- Footer with logo image -->
+    <footer>
+        <img src="skullangels.png" alt="Skull Angels">
+    </footer>
+
+    <!-- Login Modal (hidden by default) -->
+    <div id="loginModal" class="modal-overlay">
+        <div class="login-container">
+            <!-- Close button for modal -->
+            <button class="close-modal" onclick="closeLoginModal()">×</button>
+            <div class="login-header">
+                <h2>Login</h2>
+                <p>Access it.</p>
+            </div>
+            <!-- Login form -->
+            <form id="loginForm">
+                <div class="input-group">
+                    <label for="username">Username or Email</label>
+                    <input type="text" id="username" name="username" placeholder="Enter your username or email" required>
+                </div>
+                <div class="input-group">
+                    <label for="password">Password</label>
+                    <input type="password" id="password" name="password" placeholder="Enter your password" required>
+                </div>
+                <div class="remember-me">
+                    <input type="checkbox" id="remember" name="remember">
+                    <label for="remember">Remember me</label>
+                </div>
+                <button type="submit" class="login-button">Login</button>
+                <div class="forgot-password">
+                    <a href="#">Forgot Password?</a>
+                </div>
+                <div class="signup">
+                    <p><a href="#">Sign Up</a></p>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <script>
+        // Event listener for login link click
+        document.getElementById('loginLink').addEventListener('click', function(e) {
+            e.preventDefault(); // Prevent default link behavior
+            document.getElementById('loginModal').style.display = 'flex'; // Show login modal
+        });
+
+        // Function to close the login modal
+        function closeLoginModal() {
+            document.getElementById('loginModal').style.display = 'none';
+        }
+
+        // Event listener to close modal when clicking outside of it
+        window.addEventListener('click', function(e) {
+            if (e.target === document.getElementById('loginModal')) {
+                closeLoginModal();
+            }
+        });
+
+        // Event listener for form submission
+        document.getElementById('loginForm').addEventListener('submit', function(e) {
+            e.preventDefault(); // Prevent form from submitting to server
+
+            // Get input values
+            const username = document.getElementById('username').value;
+            const password = document.getElementById('password').value;
+
+            // Simple validation - just checks if fields are not empty
+            if (username && password) {
+                // Close the modal
+                closeLoginModal();
+
+                // Show welcome message and hide login link
+                document.getElementById('loginLink').style.display = 'none';
+                document.getElementById('welcomeUser').style.display = 'inline';
+                document.getElementById('userDisplay').textContent = username;
+
+                // Reset form fields
+                document.getElementById('username').value = '';
+                document.getElementById('password').value = '';
+                document.getElementById('remember').checked = false;
+            } else {
+                alert('Enter both username and password');
+            }
+        });
+    </script>
+</body>
+</html>

@@ -1,0 +1,538 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SHIFTER GALLERY</title>
+    <style>
+        /* Load custom font */
+        @font-face {
+            font-family: 'SpecialGothic';
+            src: url(SpecialGothicExpandedOne-Regular.ttf);
+        }
+
+        /* Basic body styling */
+        body {
+            font-family: 'SpecialGothic';
+            background-color: #000000;
+            color: #ffffff;
+            margin: 0;
+            padding: 20px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            min-height: 100vh;
+        }
+
+        /* Gallery title styling */
+        h1 {
+            color: #ffffff;
+            margin-bottom: 30px;
+            text-align: center;
+            letter-spacing: 1px;
+        }
+
+        /* Container for gallery layout */
+        .gallery-container {
+            width: 100%;
+            max-width: 1000px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            position: relative;
+        }
+
+        /* Container for artwork selection buttons */
+        .button-container {
+            display: flex;
+            justify-content: center;
+            flex-wrap: wrap;
+            gap: 15px;
+            margin-bottom: 30px;
+            width: 100%;
+        }
+
+        /* Styling for each artwork button */
+        button {
+            padding: 12px 20px;
+            background-color: #333333;
+            color: white;
+            border: 1px solid #666666;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 16px;
+            transition: all 0.3s ease;
+            min-width: 150px;
+            font-family: 'SpecialGothic';
+            letter-spacing: 1px;
+        }
+
+        /* Hover effect for buttons */
+        button:hover {
+            background-color: #444444;
+            transform: translateY(-2px);
+        }
+
+        /* Active button style (highlighted) */
+        button.active {
+            background-color: #555555;
+            box-shadow: 0 0 8px rgba(255, 255, 255, 0.3);
+        }
+
+        /* Image display container */
+        .image-container {
+            height: 500px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            background-color: #111111;
+            border-radius: 8px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.8);
+            overflow: hidden;
+            position: relative;
+            border: 1px solid #333333;
+        }
+
+        /* Hidden by default, fade in when active */
+        .artwork {
+            max-width: 100%;
+            max-height: 100%;
+            display: none;
+            transition: opacity 0.5s ease;
+        }
+
+        /* Displayed artwork */
+        .artwork.active {
+            display: block;
+            animation: fadeIn 0.8s;
+        }
+
+        /* Info overlay for each artwork */
+        .artwork-info {
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            background-color: rgba(0, 0, 0, 0.8);
+            color: white;
+            padding: 15px;
+            opacity: 0;
+            transition: opacity 0.3s ease;
+        }
+
+        /* Show artwork info when hovering over image */
+        .image-container:hover .artwork-info {
+            opacity: 1;
+        }
+
+        /* Title inside artwork info */
+        .artwork-info h3 {
+            margin: 0 0 5px 0;
+            font-size: 18px;
+            letter-spacing: 1px;
+            color: #ffffff;
+        }
+
+        /* Description inside artwork info */
+        .artwork-info p {
+            margin: 0;
+            font-size: 14px;
+            letter-spacing: 0.5px;
+            color: #cccccc;
+        }
+
+        /* Simple fade-in animation */
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+
+        /* Header section */
+        .site-header {
+            width: 100%;
+            max-width: 1000px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+            padding-bottom: 15px;
+            border-bottom: 1px solid #333333;
+        }
+
+        /* Site title styling */
+        .site-title {
+            font-size: 28px;
+            color: #ffffff;
+            font-weight: bold;
+            margin: 0;
+            letter-spacing: 2px;
+        }
+
+        /* Navigation link container */
+        .nav-links {
+            display: flex;
+            gap: 20px;
+        }
+
+        /* Navigation link styling */
+        .nav-link {
+            color: #cccccc;
+            text-decoration: none;
+            font-weight: bold;
+            transition: color 0.3s;
+            letter-spacing: 1px;
+        }
+
+        /* Navigation hover effect */
+        .nav-link:hover {
+            color: #ffffff;
+            text-shadow: 0 0 5px rgba(255, 255, 255, 0.5);
+        }
+
+        /* Overlay for login modal */
+        .modal-overlay {
+            position: fixed;
+            top: 0; left: 0; right: 0; bottom: 0;
+            background-color: rgba(0, 0, 0, 0.8);
+            display: none;
+            justify-content: center;
+            align-items: center;
+            z-index: 1000;
+        }
+
+        /* Modal box for login */
+        .login-container {
+            background-color: #111111;
+            padding: 2rem;
+            border-radius: 8px;
+            box-shadow: 0 4px 8px rgba(255, 255, 255, 0.1);
+            width: 100%;
+            max-width: 400px;
+            position: relative;
+            border: 1px solid #333333;
+        }
+
+        /* Close (X) button */
+        .close-modal {
+            position: absolute;
+            top: 15px;
+            right: 15px;
+            font-size: 24px;
+            color: #cccccc;
+            cursor: pointer;
+            border: none;
+            background: none;
+            font-family: 'SpecialGothic';
+        }
+
+        .close-modal:hover {
+            color: #ffffff;
+        }
+
+        /* Login modal header */
+        .login-header {
+            text-align: center;
+            margin-bottom: 1.5rem;
+        }
+
+        .login-header h2 {
+            color: #ffffff;
+            margin-bottom: 0.5rem;
+            letter-spacing: 1.5px;
+        }
+
+        .login-header p {
+            color: #aaaaaa;
+            margin: 0;
+            letter-spacing: 0.5px;
+        }
+
+        /* Form input group */
+        .input-group {
+            margin-bottom: 1rem;
+        }
+
+        .input-group label {
+            display: block;
+            margin-bottom: 0.5rem;
+            color: #ffffff;
+            font-weight: bold;
+            letter-spacing: 0.5px;
+        }
+
+        .input-group input {
+            width: 100%;
+            padding: 0.75rem;
+            border: 1px solid #444444;
+            border-radius: 4px;
+            font-size: 1rem;
+            background-color: #222222;
+            color: #ffffff;
+            font-family: 'SpecialGothic';
+        }
+
+        .input-group input:focus {
+            outline: none;
+            border-color: #666666;
+            box-shadow: 0 0 5px rgba(255, 255, 255, 0.2);
+        }
+
+        /* "Remember me" checkbox */
+        .remember-me {
+            display: flex;
+            align-items: center;
+            margin-bottom: 1rem;
+            color: #cccccc;
+        }
+
+        .remember-me input {
+            margin-right: 0.5rem;
+        }
+
+        /* Login button */
+        .login-button {
+            background-color: #333333;
+            color: white;
+            border: 1px solid #555555;
+            padding: 0.75rem;
+            width: 100%;
+            border-radius: 4px;
+            font-size: 1rem;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-family: 'SpecialGothic';
+            letter-spacing: 1px;
+        }
+
+        .login-button:hover {
+            background-color: #444444;
+            box-shadow: 0 0 5px rgba(255, 255, 255, 0.2);
+        }
+
+        /* Forgot password link */
+        .forgot-password {
+            text-align: center;
+            margin-top: 1rem;
+        }
+
+        .forgot-password a {
+            color: #aaaaaa;
+            text-decoration: none;
+            letter-spacing: 0.5px;
+        }
+
+        .forgot-password a:hover {
+            color: #ffffff;
+        }
+
+        /* Signup link */
+        .signup {
+            text-align: center;
+            margin-top: 1.5rem;
+            padding-top: 1rem;
+            border-top: 1px solid #333333;
+        }
+
+        .signup a {
+            color: #aaaaaa;
+            text-decoration: none;
+            font-weight: bold;
+            letter-spacing: 0.5px;
+        }
+
+        .signup a:hover {
+            color: #ffffff;
+        }
+
+        /* Welcome message after login */
+        .welcome-user {
+            display: none;
+            color: #ffffff;
+            font-weight: bold;
+            letter-spacing: 0.5px;
+        }
+
+        /* Responsive styles for smaller screens */
+        @media (max-width: 768px) {
+            .button-container {
+                flex-direction: column;
+                align-items: center;
+            }
+
+            button {
+                width: 80%;
+            }
+
+            .site-header {
+                flex-direction: column;
+                gap: 15px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="gallery-container">
+        <!-- Header with site title and nav links -->
+        <header class="site-header">
+            <h2 class="site-title">SHIFTER GALLERY</h2>
+            <div class="nav-links">
+                <a href="index.html" class="nav-link">Home</a>
+                <a href="about.html" class="nav-link">About</a>
+                <a href="contact.html" class="nav-link">Contact</a>
+                <a href="#" id="loginLink" class="nav-link">Login</a>
+                <span id="welcomeUser" class="welcome-user">Welcome, <span id="userDisplay"></span>!</span>
+            </div>
+        </header>
+
+        <h1>Currently Available:</h1>
+
+        <!-- Buttons to select artwork -->
+        <div class="button-container">
+            <button onclick="showArtwork(1)" id="btn1">Isle Of The Dead</button>
+            <button onclick="showArtwork(2)" id="btn2">Villa By The Sea</button>
+            <button onclick="showArtwork(3)" id="btn3">The island of Life</button>
+            <button onclick="showArtwork(4)" id="btn4">The Sacred Grove</button>
+        </div>
+
+        <!-- Image and info for each artwork -->
+        <div class="image-container">
+            <img src="deadisle.jpg" alt="Isle of The Dead" class="artwork" id="artwork1">
+            <div class="artwork-info">
+                <h3>Isle of The Dead</h3>
+                <p>1880 • Oil on canvas • Restored</p>
+                <p>A desolate and rocky isle seen across an expanse of dark water.</p>
+            </div>
+
+            <img src="villa.jpg" alt="Villa By The Sea" class="artwork" id="artwork2">
+            <div class="artwork-info">
+                <h3>Villa By The Sea</h3>
+                <p>1874 • Oil on canvas • Restored</p>
+                <p>A villa by the sea, with a woman by the shore. It invokes feelings of mourning.</p>
+            </div>
+
+            <img src="lifeisland.jpeg" alt="The island of Life" class="artwork" id="artwork3">
+            <div class="artwork-info">
+                <h3>The Island of Life</h3>
+                <p>1888 • Oil on canvas • Restored</p>
+                <p>A romantic painting of life.</p>
+            </div>
+
+            <img src="grovesacred.jpg" alt="The Sacred Grove" class="artwork" id="artwork4">
+            <div class="artwork-info">
+                <h3>The Sacred Grove</h3>
+                <p>1886 • Oil on canvas • Poor Condition</p>
+                <p>A sacred grove, where we see people going to pray.</p>
+            </div>
+        </div>
+    </div>
+
+    <!-- Footer image (thematic) -->
+    <footer>
+        <img src="skullangels.png" alt="Skull Angels">
+    </footer>
+
+    <!-- Login modal overlay -->
+    <div id="loginModal" class="modal-overlay">
+        <div class="login-container">
+            <button class="close-modal" onclick="closeLoginModal()">×</button>
+            <div class="login-header">
+                <h2>Login</h2>
+                <p>Access it.</p>
+            </div>
+            <!-- Login form -->
+            <form id="loginForm">
+                <div class="input-group">
+                    <label for="username">Username or Email</label>
+                    <input type="text" id="username" name="username" required>
+                </div>
+                <div class="input-group">
+                    <label for="password">Password</label>
+                    <input type="password" id="password" name="password" required>
+                </div>
+                <div class="remember-me">
+                    <input type="checkbox" id="remember">
+                    <label for="remember">Remember me</label>
+                </div>
+                <button type="submit" class="login-button">Login</button>
+                <div class="forgot-password">
+                    <a href="#">Forgot Password?</a>
+                </div>
+                <div class="signup">
+                    <p><a href="#">Sign Up</a></p>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <script>
+        // When the page loads, show the first artwork by default
+        document.addEventListener('DOMContentLoaded', function () {
+            showArtwork(1);
+        });
+
+        // Function to show the selected artwork and hide the others
+        function showArtwork(artworkNumber) {
+            const artworks = document.querySelectorAll('.artwork');
+            artworks.forEach(artwork => artwork.classList.remove('active'));
+
+            const selectedArtwork = document.getElementById('artwork' + artworkNumber);
+            selectedArtwork.classList.add('active');
+
+            const buttons = document.querySelectorAll('.button-container button');
+            buttons.forEach(button => button.classList.remove('active'));
+
+            const activeButton = document.getElementById('btn' + artworkNumber);
+            activeButton.classList.add('active');
+
+            // Show only the relevant artwork description
+            const artworkInfos = document.querySelectorAll('.artwork-info');
+            artworkInfos.forEach(info => info.style.display = 'none');
+
+            const selectedInfo = selectedArtwork.nextElementSibling;
+            selectedInfo.style.display = 'block';
+        }
+
+        // Show login modal
+        document.getElementById('loginLink').addEventListener('click', function (e) {
+            e.preventDefault();
+            document.getElementById('loginModal').style.display = 'flex';
+        });
+
+        // Close login modal function
+        function closeLoginModal() {
+            document.getElementById('loginModal').style.display = 'none';
+        }
+
+        // Close modal if clicking outside the login box
+        window.addEventListener('click', function (e) {
+            if (e.target === document.getElementById('loginModal')) {
+                closeLoginModal();
+            }
+        });
+
+        // Handle login form submission
+        document.getElementById('loginForm').addEventListener('submit', function (e) {
+            e.preventDefault(); // prevent page refresh
+
+            const username = document.getElementById('username').value;
+            const password = document.getElementById('password').value;
+
+            if (username && password) {
+                closeLoginModal();
+
+                // Hide login link, show welcome message
+                document.getElementById('loginLink').style.display = 'none';
+                document.getElementById('welcomeUser').style.display = 'inline';
+                document.getElementById('userDisplay').textContent = username;
+
+                // Reset form
+                document.getElementById('username').value = '';
+                document.getElementById('password').value = '';
+                document.getElementById('remember').checked = false;
+            } else {
+                alert('Enter both username and password');
+            }
+        });
+    </script>
+</body>
+</html>
