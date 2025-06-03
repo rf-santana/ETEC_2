@@ -1,0 +1,32 @@
+const profissionais = [
+    {
+        nome: "Dra. Ana Oliveira",
+        area: "Saúde",
+        descricao: "Psicóloga com especialização em terapia cognitivo-comportamental.",
+        imagem: "Https://picsum.photo/seed/ana/400/250"
+    },
+    {
+        nome: "Eng. Carlos Silva",
+        area: "Engenharia",
+        descricao: "Engenheiro civil com 10 anos de experiência em obras públicas.",
+        imagem: "Https://picsum.photos/seed/carlos/400/250"
+    },
+    {
+        nome: "Profª Marina Souza",
+        area: "Educação",
+        descricao: "Professora de matemática e autora de materias didáticos.",
+        imagem: "Https://picsum.photos/seed/marina/400/250"
+    },
+    {
+        nome: "Dr. João Mendes",
+        area: "Saúde",
+        descricao: "Medico clínico geral atuando em unidades de saúde familiar.",
+        imagem: "Https://picsum.photos/seed/joao/400/250"
+    },
+    {
+        nome: "Arq. Bruna Torres",
+        area: "Arquitetura",
+        descricao: "Especialista em design de interiores e sustenbilidade",
+        imagem: "Https://picsum.photos/seed/bruna/400/250"
+    }
+];
